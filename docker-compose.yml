@@ -1,0 +1,31 @@
+#From https://towardsdatascience.com/docker-for-python-dash-r-shiny-6097c8998506
+
+version: "3.7"
+services:
+  app: 
+    build: 
+      context: ./project
+      dockerfile: Dockerfile
+    command: gunicorn --bind 0.0.0.0:8050 --chdir app/ app:server
+    volumes:
+      - ./project:/usr/src/app
+    # image: dash-example-app:1.0
+    container_name: dash-example
+    ports:
+      - "8050:8050"
+    environment:
+      - TARGET=dev
+    # restart: unless-stopped
+    depends_on:
+      - app-db
+  
+  app-db:
+    build:
+      context: ./project/db
+      dockerfile: Dockerfile
+    # image: dash-example-app-db:1.0
+    expose:
+      - 5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
