@@ -2,18 +2,38 @@ import dash
 import dash_bootstrap_components as dbc
 import dash_core_components as dcc
 import dash_html_components as html
-import flask
 from dash.dependencies import Input, Output
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 from functions import plot_regression
 
-server = flask.Flask(__name__)
+server = Flask(__name__)
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP], server=server)
+server.config[
+    "SQLALCHEMY_DATABASE_URI"
+] = "postgresql://postgres:postgres@app-db:5432/web_dev"
+
 server = app.server
+db = SQLAlchemy(server)
+with server.app_context():
+    db.create_all()
+
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String, unique=True, nullable=False)
+    email = db.Column(db.String, unique=True, nullable=False)
+
+
+db.session.add(User(username="Flask", email="example@example.com"))
+db.session.commit()
+
+users = User.query.all()
 
 app.layout = html.Div(
     [
         html.Div(
-            "Regression fit example, request",
+            f"Regression fit example, request {users}",
             style={
                 "fontSize": 28,
                 "marginLeft": "40px",

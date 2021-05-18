@@ -6,7 +6,8 @@ services:
     build: 
       context: ./project
       dockerfile: Dockerfile
-    command: gunicorn --bind 0.0.0.0:8050 --chdir app/ app:server
+    command: gunicorn --reload --bind 0.0.0.0:8050 --chdir app/ app:server
+    # command: gunicorn app.app:server --reload --bind 0.0.0.0:8050 --chdir 
     volumes:
       - ./project:/usr/src/app
     # image: dash-example-app:1.0
@@ -15,8 +16,9 @@ services:
       - "8050:8050"
     environment:
       - TARGET=dev
-    # restart: unless-stopped
-    depends_on:
+      - DATABASE_URL=postgres://postgres:postgres@app-db:5432/web_dev
+      - DATABASE_TEST_URL=postgres://postgres:postgres@app-db:5432/web_test
+    depends_on: 
       - app-db
   
   app-db:
