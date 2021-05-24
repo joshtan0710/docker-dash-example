@@ -13,22 +13,22 @@ server.config[
     "SQLALCHEMY_DATABASE_URI"
 ] = "postgresql://postgres:postgres@app-db:5432/web_dev"
 
-server = app.server
-db = SQLAlchemy(server)
-with server.app_context():
-    db.create_all()
+# server = app.server
+# db = SQLAlchemy(server)
+# with server.app_context():
+#     db.create_all()
 
 
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String, unique=True, nullable=False)
-    email = db.Column(db.String, unique=True, nullable=False)
+# class User(db.Model):
+#     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+#     username = db.Column(db.String, unique=True, nullable=False)
+#     email = db.Column(db.String, unique=True, nullable=False)
 
 
-db.session.add(User(username="Flask", email="example@example.com"))
-db.session.commit()
+# db.session.add(User(id=10, username="Flask", email="example@example.com"))
+# db.session.commit()
 
-users = User.query.all()
+# users = User.query.all()
 
 app.layout = html.Div(
     [
