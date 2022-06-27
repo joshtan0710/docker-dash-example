@@ -2,7 +2,7 @@
 
 FROM python:3.8.6-slim-buster
 
-LABEL maintainer "Robin Opdam, robinopdam@hotmail.com"
+LABEL maintainer "Joshua, test@hotmail.com"
 
 # set working directory in container
 WORKDIR /usr/src/app
@@ -19,5 +19,5 @@ COPY /app /usr/src/app/
 RUN useradd -m appUser
 USER appUser
 
-# Run locally
+# Run locally, first parameter is app.py file, next is server variable
 CMD gunicorn --bind 0.0.0.0:8050 app:server
